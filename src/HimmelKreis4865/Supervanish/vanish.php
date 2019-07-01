@@ -25,7 +25,7 @@ class vanish extends PluginBase implements Listener{
                     $target = $this->getServer()->getPlayer($args[0]);
                     
                     if (!$target == null){
-                        $tcfg = new Config($this->getDataFolder(). $target . ".yml", Config::YAML);
+                        $tcfg = new Config($this->getDataFolder(). $target->getName() . ".yml", Config::YAML);
                         if (file_exists($this->getDataFolder(). $target . ".yml")){
                             if ($tcfg->get("Vanished") == true){
                                 $tcfg->set("Vanished", false);
@@ -40,12 +40,14 @@ class vanish extends PluginBase implements Listener{
                                 $tcfg->save();
                                 $target->sendMessage($this->getConfig()->get("ActivateByOtherMessage"));
                                 $sender->sendMessage($this->getConfig()->get("ActivateOtherMessage"));
+                                foreach ($online as $p){
                                     if (!$p->isOp() or !$p->hasPermission("sv.see")){
                                         $p->hidePlayer($target);
                                     }else{
                                         $p->showPlayer($target);
                                     }
                                 }
+                              }
                             }
                         }else{
                             $sender->sendMessage($this->getConfig()->get("InvalidPlayer"));
@@ -66,8 +68,7 @@ class vanish extends PluginBase implements Listener{
                         }
                         $sender->sendMessage($this->getConfig()->get("ActivateMessage"));
                         $cfg->set("Vanished", true);
-                    }
-                }
+                  }
             }
         }
         return true;
