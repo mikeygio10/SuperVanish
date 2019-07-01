@@ -1,5 +1,7 @@
 --- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/HimmelKreis4865/SuperVanish
 branches:
 - master
-projects: []
+projects: 
+  SuperVanish:
+    path: ""
 ...
