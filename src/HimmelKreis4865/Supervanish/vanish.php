@@ -22,24 +22,31 @@ class vanish extends PluginBase implements Listener{
         if ($cmd->getName() == "sv"){
             if ($sender->hasPermission("sv.use") or $sender->hasPermission("sv.admin")){
                 if (isset($args[0])){
-                    if ($args[0] == "on"){
-                        $cfg->set("Vanished", true);
-                        $cfg->save();
-                        foreach ($online as $p){
-                            if ($p->isOp() or $p->hasPermission("sv.admin") or $p->hasPermission("sv.see")){
-                                $p->showPlayer($sender);
+                    $target = $this->getServer()->getPlayer($args[0]);
+                    
+                    if (!$target == null){
+                        $tcfg = new Config($this->getDataFolder(). $target . ".yml", Config::YAML);
+                        if (file_exists($this->getDataFolder(). $target . ".yml")){
+                            if ($tcfg->get("Vanished") == true){
+                                $tcfg->set("Vanished", false);
+                                $tcfg->save();
+                                $target->sendMessage($this->getConfig()->get("DeactivateMessage"))
+                                foreach ($online as $p){
+                                    $p->showPlayer($target);
+                                }
                             }else{
-                                $p->hidePlayer($sender);
+                                $tcfg->set("Vanished", true);
+                                $tcfg->save();
+                                $target->sendMessage($this->getConfig()->get("ActivateMessage"));
+                                foreach ($online as $p){
+                                    if (!p->isOp() or !p->hasPermission("sv.see")){
+                                        $p->hidePlayer($target);
+                                    }else{
+                                        $p->showPlayer($target);
+                                    }
+                                }
                             }
                         }
-                        $sender->sendMessage($this->getConfig()->get("ActivateMessage"));
-                    } elseif ($args[0] == "off"){
-                        foreach ($online as $p){
-                            $p->showPlayer($sender);
-                        }
-                        $sender->sendMessage($this->getConfig()->get("DeactivateMessage"));
-                        $cfg->set("Vanished", false);
-                        $cfg->save();
                     }
                 }
             }
@@ -52,7 +59,7 @@ class vanish extends PluginBase implements Listener{
         foreach($online as $p){
             $cfg = new Config($this->getDataFolder(). $p->getName() . ".yml", Config::YAML);
             if (file_exists($this->getDataFolder(). $p->getName() . ".yml")){
-                if ($cfg->get("Vanished") == true){
+                if ($cfg->get("Vanished") == "true"){
                     if (!$player->isOp() or !$player->hasPermission("sv.admin")){
                         $player->hidePlayer($p);
                     }else{
