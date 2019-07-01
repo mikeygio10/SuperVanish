@@ -1,0 +1,23 @@
+name: Supervanish
+author: HimmelKreis4865
+main: HimmelKreis4865\Supervanish\vanish
+version: 1.0
+api: [3.0.0, 3.3.0]
+commands:
+  sv:
+    description: Go into supervanish!
+    aliases: ["supervanish", "vanish", "v"]
+permissions:
+  sv:
+    description: Use /sv
+    default: op
+    children:
+      sv.command:
+        description: use the command /sv
+        default: op
+      sv.see:
+        description: See all vanished Players!
+        default: op
+      sv.admin:
+        description: You can use everything with it! 
+        default: op
