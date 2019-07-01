@@ -30,23 +30,42 @@ class vanish extends PluginBase implements Listener{
                             if ($tcfg->get("Vanished") == true){
                                 $tcfg->set("Vanished", false);
                                 $tcfg->save();
-                                $target->sendMessage($this->getConfig()->get("DeactivateMessage"))
+                                $target->sendMessage($this->getConfig()->get("DeactivateByOtherMessage"));
+                                $sender->sendMessage($this->getConfig()->get("DeactivateOtherMessage"));
                                 foreach ($online as $p){
                                     $p->showPlayer($target);
                                 }
                             }else{
                                 $tcfg->set("Vanished", true);
                                 $tcfg->save();
-                                $target->sendMessage($this->getConfig()->get("ActivateMessage"));
-                                foreach ($online as $p){
-                                    if (!p->isOp() or !p->hasPermission("sv.see")){
+                                $target->sendMessage($this->getConfig()->get("ActivateByOtherMessage"));
+                                $sender->sendMessage($this->getConfig()->get("ActivateOtherMessage"));
+                                    if (!$p->isOp() or !$p->hasPermission("sv.see")){
                                         $p->hidePlayer($target);
                                     }else{
                                         $p->showPlayer($target);
                                     }
                                 }
                             }
+                        }else{
+                            $sender->sendMessage($this->getConfig()->get("InvalidPlayer"));
                         }
+                    }
+                }else{
+                    if ($cfg->get("Vanished") == true){
+                        foreach ($online as $p){
+                            $p->showPlayer($sender);
+                        }
+                        $sender->sendMessage($this->getConfig()->get("DeactivateMessage"));
+                        $cfg->set("Vanished", false);
+                    }else{
+                        foreach ($online as $p){
+                            if (!$p->isOp() or !$p->hasPermission("hide.see")){
+                                $p->showPlayer($sender);
+                            }
+                        }
+                        $sender->sendMessage($this->getConfig()->get("ActivateMessage"));
+                        $cfg->set("Vanished", true);
                     }
                 }
             }
