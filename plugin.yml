@@ -6,7 +6,7 @@ api: [3.0.0, 3.3.0]
 commands:
   sv:
     description: Go into supervanish!
-    aliases: ["supervanish", "vanish", "v"]
+    aliases: ["supervanish"]
 permissions:
   sv:
     description: Use /sv
